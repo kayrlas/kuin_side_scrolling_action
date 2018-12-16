@@ -1,0 +1,170 @@
+class Player(game@Rect)
+	+var toRight: bool
+end class
+
+var wndMain: wnd@Wnd
+var drawMain: wnd@Draw
+
+var texBack: draw@Tex {background texture}
+var texPlayer: draw@Tex {player texture}
+var player: @Player {player class}
+var texMap: draw@Tex {map texture}
+var map: game@Map {map data}
+
+const WinWidth: int :: 1600
+const WinHeight: int :: 900
+const chipWidth: float :: 64.0
+const chipHeight: float :: 64.0
+const chipNumCol: int :: 26 {WinWidth/chipWidth}
+const chipNumRow: int :: 15 {WinHeight/chipHeight}
+
+func main()
+	do @wndMain :: wnd@makeWnd(null, %aspect, @WinWidth, @WinHeight, "kuin_side_scrolling_action (kayrlas)")
+	do @drawMain :: wnd@makeDraw(@wndMain, 0, 0, @WinWidth, @WinHeight, %scale, %scale, false)
+	var fontProportional: draw@Font :: draw@makeFont(null, 32, false, false, true, 0.0)
+	
+	; res
+	do @texBack :: draw@makeTex("res/dot_back_side.png")
+	do @texPlayer :: draw@makeTex("res/dot_kuina_chan.png")
+	do @texMap :: draw@makeTex("res/dot_map_chips_side.png")
+	; player
+	do @player :: #@Player
+	do @player.x :: 96.0
+	do @player.y :: 800.0
+	do @player.width :: 46.0
+	do @player.height :: 116.0
+	do @player.toRight :: true
+	; texture
+	do draw@sampler(%point)
+	var pattern: []float :: [0.0, 64.0, 0.0, 128.0]
+	
+	while(wnd@act())
+		; (destination) X, Y, Width, Height, (source) X, Y, Width, Height, color
+		do @texBack.drawScale(0.0, 0.0, @WinWidth $ float, @WinHeight $ float, 0.0, 0.0, 800.0, 450.0, draw@white)
+		; road map
+		var player_moves_in_the_map: bool :: false
+		if (@player.x < 800.0 - 32.0)
+			do @map :: game@makeMap("res/map_00.txt", @chipWidth, @chipHeight)
+			do player_moves_in_the_map :: true
+		elif (@player.x < 800.0 - 32.0 + 1.0)
+			do @map :: game@makeMap("res/map_01.txt", @chipWidth, @chipHeight)
+		elif (@player.x < 800.0 - 32.0 + 2.0)
+			do @map :: game@makeMap("res/map_02.txt", @chipWidth, @chipHeight)
+		elif (@player.x < 800.0 - 32.0 + 3.0)
+			do @map :: game@makeMap("res/map_03.txt", @chipWidth, @chipHeight)
+		elif (@player.x < 800.0 - 32.0 + 4.0)
+			do @map :: game@makeMap("res/map_04.txt", @chipWidth, @chipHeight)
+		elif (@player.x < 800.0 - 32.0 + 5.0)
+			do @map :: game@makeMap("res/map_05.txt", @chipWidth, @chipHeight)
+		elif (@player.x < 800.0 - 32.0 + 6.0)
+			do @map :: game@makeMap("res/map_06.txt", @chipWidth, @chipHeight)
+		elif (@player.x < 800.0 - 32.0 + 7.0)
+			do @map :: game@makeMap("res/map_07.txt", @chipWidth, @chipHeight)
+		elif (@player.x < 800.0 - 32.0 + 8.0)
+			do @map :: game@makeMap("res/map_08.txt", @chipWidth, @chipHeight)
+		elif (@player.x < 800.0 - 32.0 + 9.0)
+			do @map :: game@makeMap("res/map_09.txt", @chipWidth, @chipHeight)
+		elif (@player.x < 800.0 - 32.0 + 10.0)
+			do @map :: game@makeMap("res/map_10.txt", @chipWidth, @chipHeight)
+		elif (@player.x < 800.0 - 32.0 + 11.0)
+			do @map :: game@makeMap("res/map_11.txt", @chipWidth, @chipHeight)
+		elif (@player.x < 800.0 - 32.0 + 12.0)
+			do @map :: game@makeMap("res/map_12.txt", @chipWidth, @chipHeight)
+		elif (@player.x < 800.0 - 32.0 + 13.0)
+			do @map :: game@makeMap("res/map_13.txt", @chipWidth, @chipHeight)
+		elif (@player.x < 800.0 - 32.0 + 14.0)
+			do @map :: game@makeMap("res/map_14.txt", @chipWidth, @chipHeight)
+		elif (@player.x < 800.0 - 32.0 + 15.0)
+			do @map :: game@makeMap("res/map_15.txt", @chipWidth, @chipHeight)
+		elif (@player.x < 800.0 - 32.0 + 16.0)
+			do @map :: game@makeMap("res/map_16.txt", @chipWidth, @chipHeight)
+		elif (@player.x < 800.0 - 32.0 + 17.0)
+			do @map :: game@makeMap("res/map_17.txt", @chipWidth, @chipHeight)
+		elif (@player.x < 800.0 - 32.0 + 18.0)
+			do @map :: game@makeMap("res/map_18.txt", @chipWidth, @chipHeight)
+		elif (@player.x < 800.0 - 32.0 + 19.0)
+			do @map :: game@makeMap("res/map_19.txt", @chipWidth, @chipHeight)
+		elif (@player.x < 800.0 - 32.0 + 20.0)
+			do @map :: game@makeMap("res/map_20.txt", @chipWidth, @chipHeight)
+		elif (@player.x < 800.0 - 32.0 + 21.0)
+			do @map :: game@makeMap("res/map_21.txt", @chipWidth, @chipHeight)
+		elif (@player.x < 800.0 - 32.0 + 22.0)
+			do @map :: game@makeMap("res/map_22.txt", @chipWidth, @chipHeight)
+		elif (@player.x < 800.0 - 32.0 + 23.0)
+			do @map :: game@makeMap("res/map_23.txt", @chipWidth, @chipHeight)
+		else
+			do @map :: game@makeMap("res/map_24.txt", @chipWidth, @chipHeight)
+			do player_moves_in_the_map :: true
+		end if
+
+		; player operation
+		if(input@pad(0, %left) >= 1)
+			do @player.veloX :- 0.8
+			do @player.toRight :: false
+		end if
+		if(input@pad(0, %right) >= 1)
+			do @player.veloX :+ 0.8
+			do @player.toRight :: true
+		end if
+		; jump
+		if(input@pad(0, %a) >= 1 & input@pad(0, %a) <= 6 & @player.hitBottom())
+			do @player.veloY :: -14.0
+		end if
+		
+		do @player.veloY :+ 0.4 {gravity}
+		if (player_moves_in_the_map)
+			do @player.veloX :: @player.veloX.clamp(-8.0, 8.0) {limitation}
+		else
+			do @player.veloX :: @player.veloX.clamp(-0.1, 0.1) {limitation}
+		end if
+		do @player.veloY :: @player.veloY.clamp(-14.0, 14.0) {limitation}
+		
+		; player coodinate
+		do fontProportional.draw(50.0, 20.0, "X: ", draw@white)
+		do fontProportional.draw(100.0, 20.0, @player.x.toStr(), draw@white)
+		do fontProportional.draw(50.0, 60.0, "Y: ", draw@white)
+		do fontProportional.draw(100.0, 60.0, @player.y.toStr(), draw@white)
+		
+		; collision
+		do @player.move(0.0)
+		do game@hitMapRect(@map, @player, getChipInfo, null)
+		do @player.update()
+		
+		func getChipInfo(chip: int, info: game@ChipInfo)
+			switch(chip)
+			case lib@intMin to - 1
+				do info.shape :: %none
+			case 0, 1
+				do info.shape :: %rect
+				do info.solidFriction :: 0.2
+			case 2
+				do info.shape :: %triLeftTop
+				do info.solidFriction :: 0.1
+			case 6
+				do info.shape :: %rect
+				do info.solidFriction :: 0.0
+			case 7
+				do info.shape :: %rect
+				do info.solidFriction :: 0.2
+				do info.repulsion :: 0.95
+			end switch
+			do info.fluidFriction :: 0.98
+		end func
+		
+		; (destination) X, Y, Width, Height, (source) X, Y, Width, Height, color
+		do @texPlayer.drawScale(@player.x - 64.0, @player.y - 64.0, 128.0, 128.0, pattern[draw@cnt() / 12 % 4], @player.toRight ?(128.0, 0.0), 64.0, 64.0, draw@white)
+		
+		; drawing map
+		for y(0, @chipNumRow - 1)
+			for x(0, @chipNumCol - 1)
+				var chip: int :: @map.get(x, y)
+				if(chip >= 0)
+					do @texMap.drawScale(x $float * 64.0 - 32.0, y $ float * 64.0 - 32.0, 64.0, 64.0, chip $ float * 32.0, 0.0, 32.0, 32.0, draw@white)
+				end if
+			end for
+		end for
+		
+		do draw@render(60)
+		
+	end while
+end func
